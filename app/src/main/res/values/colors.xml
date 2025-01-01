@@ -1,0 +1,10 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <color name="black">#FF000000</color>
+    <color name="white">#FFFFFFFF</color>
+    <color name="player_one_color">#ffc34a</color>
+    <color name="player_two_color">#70fc3a</color>
+    <color name="default_button_color">#FFFFFF</color>
+    <color name="winning_combination_color">#FFD700</color>
+
+</resources>
