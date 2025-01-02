@@ -1,0 +1,39 @@
+<RelativeLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="@drawable/bg">
+
+    <TextView
+        android:id="@+id/textIntro"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="100dp"
+        android:text="eTic Tac Toe"
+        android:textSize="60sp"
+        android:textStyle="bold"
+        android:textColor="@color/white" />
+
+    <Button
+        android:id="@+id/btnStartGame"
+        android:layout_width="240dp"
+        android:layout_height="240dp"
+        android:layout_centerInParent="true"
+        android:layout_marginBottom="8dp"
+        android:backgroundTint="#ffbb00"
+        android:text="Start Game"
+        android:textSize="30dp"
+        android:textStyle="bold" />
+
+    <Button
+    android:id="@+id/btnInfo"
+    android:layout_width="20dp"
+    android:layout_height="20dp"
+    android:layout_alignParentStart="true"
+    android:layout_alignParentBottom="true"
+    android:layout_margin="16dp"
+    android:background="@android:drawable/ic_dialog_info" />
+
+</RelativeLayout>

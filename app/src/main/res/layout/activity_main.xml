@@ -9,7 +9,6 @@
     android:layout_margin="10dp"
     android:background="@drawable/bg">
 
-    <!-- Player X etiketi -->
     <TextView
         android:id="@+id/label_Player1"
         android:layout_width="wrap_content"
@@ -22,7 +21,6 @@
         android:layout_above="@id/score_Player1"
         android:layout_marginBottom="-90dp" />
 
-    <!-- Player O etiketi -->
     <TextView
         android:id="@+id/label_Player2"
         android:layout_width="wrap_content"
@@ -41,6 +39,7 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text=""
+        android:alpha="0"
         />
 
     <TextView
@@ -70,7 +69,6 @@
         android:gravity="center"
         android:visibility="invisible" />
 
-    <!-- Buttons layout -->
     <LinearLayout
         android:id="@+id/layout_linear"
         android:layout_width="wrap_content"
@@ -79,27 +77,28 @@
         android:layout_centerHorizontal="true"
         android:layout_centerVertical="true">
 
-        <!-- Rows of buttons -->
         <LinearLayout
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:orientation="horizontal">
+
             <Button
                 android:id="@+id/btn0"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
                 android:textSize="26dp"
                 android:layout_marginHorizontal="5dp"
-                android:layout_marginBottom="1.25dp"
-                android:background="@android:drawable/btn_default"/>
+                android:background="@android:drawable/btn_default"
+                />
+
             <Button
                 android:id="@+id/btn1"
                 android:layout_width="100dp"
                 android:layout_height="100dp"
-                android:textSize="26dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginBottom="1.25dp"
-                android:background="@android:drawable/btn_default" />
+                android:background="@android:drawable/btn_default"
+                android:textSize="26dp" />
             <Button
                 android:id="@+id/btn2"
                 android:layout_width="100dp"
@@ -172,7 +171,6 @@
 
     </LinearLayout>
 
-    <!-- Play again and reset buttons -->
     <Button
         android:id="@+id/btn_play_again"
         android:layout_width="wrap_content"
@@ -194,5 +192,14 @@
         android:layout_centerHorizontal="true"
         android:layout_marginBottom="16dp"
         android:backgroundTint="#cc1234" />
+
+    <Button
+        android:id="@+id/btnInfoGame"
+        android:layout_width="20dp"
+        android:layout_height="20dp"
+        android:layout_alignParentStart="true"
+        android:layout_alignParentBottom="true"
+        android:layout_margin="16dp"
+        android:background="@android:drawable/ic_dialog_info" />
 
 </RelativeLayout>

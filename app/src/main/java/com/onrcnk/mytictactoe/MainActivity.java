@@ -10,6 +10,7 @@ import android.widget.Button;
 import android.widget.TextView;
 
 import androidx.appcompat.app.AppCompatActivity;
+import androidx.core.content.ContextCompat;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -44,19 +45,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
-        // SoundPool yapılandırması
+        Button infoButtonGame = findViewById(R.id.btnInfoGame);
+        infoButtonGame.setBackgroundTintList(
+                ContextCompat.getColorStateList(this, R.color.info_color));
+
         AudioAttributes audioAttributes = new AudioAttributes.Builder()
                 .setUsage(AudioAttributes.USAGE_GAME)
                 .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
                 .build();
         soundPool = new SoundPool.Builder()
-                .setMaxStreams(2) // Aynı anda iki ses çalabilir
+                .setMaxStreams(2)
                 .setAudioAttributes(audioAttributes)
                 .build();
-        soundX = soundPool.load(this, R.raw.soundx, 1); // PlayerX sesi
-        soundO = soundPool.load(this, R.raw.soundo, 1); // PlayerO sesi
+        soundX = soundPool.load(this, R.raw.soundx, 1);
+        soundO = soundPool.load(this, R.raw.soundo, 1);
 
-        // UI Elemanlarını Bağlama
         playerOneScore = findViewById(R.id.score_Player1);
         playerTwoScore = findViewById(R.id.score_Player2);
         playerStatus = findViewById(R.id.textStatus);
@@ -74,18 +77,15 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttons[7] = findViewById(R.id.btn7);
         buttons[8] = findViewById(R.id.btn8);
 
-        // Butonlara Click Listener Atama
         for (Button button : buttons) {
             button.setOnClickListener(this);
         }
 
-        // Başlangıç Ayarları
         playerOneScoreCount = 0;
         playerTwoScoreCount = 0;
         playerOneActive = true;
         rounds = 0;
 
-        // Reset ve Play Again Butonları için Listener Ayarları
         reset.setOnClickListener(view -> resetGame());
         playAgain.setOnClickListener(view -> playAgain());
 
@@ -100,17 +100,16 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         int gameStatePointer = Integer.parseInt(buttonID.substring(3));
 
         if (!clickedButton.getText().toString().equals("")) {
-            return; // Buton zaten işaretlenmişse hiçbir şey yapma
+            return;
         }
 
-        // Büyüme-küçülme animasyonu
         playBounceAnimation(clickedButton);
 
         if (playerOneActive) {
-            playSoundEffect(soundX); // PlayerX hamlesinde soundX çal
+            playSoundEffect(soundX);
             makeMove(clickedButton, gameStatePointer, PLAYER_ONE, playerOneMoves, R.color.player_one_color);
         } else {
-            playSoundEffect(soundO); // PlayerO hamlesinde soundO çal
+            playSoundEffect(soundO);
             makeMove(clickedButton, gameStatePointer, PLAYER_TWO, playerTwoMoves, R.color.player_two_color);
         }
 
@@ -129,7 +128,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     reset.setVisibility(View.INVISIBLE);
                     updateGameStatus();
                     disableAllButtons();
-                    animateWinnerText(); // Animasyonu tetikle
+                    animateWinnerText();
                     return;
                 }
             } else {
@@ -144,20 +143,20 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     reset.setVisibility(View.INVISIBLE);
                     updateGameStatus();
                     disableAllButtons();
-                    animateWinnerText(); // Animasyonu tetikle
+                    animateWinnerText();
                     return;
                 }
             }
         }
 
         if (!isWinner) {
-            playerOneActive = !playerOneActive; // Oyuncu değişimi
+            playerOneActive = !playerOneActive;
         }
         updateGameStatus();
     }
 
     private void playSoundEffect(int soundId) {
-        soundPool.play(soundId, 1, 1, 0, 0, 1); // Verilen ses efektini çal
+        soundPool.play(soundId, 1, 1, 0, 0, 1);
     }
 
     private void playBounceAnimation(Button button) {
@@ -171,7 +170,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gameState[position] = player;
         moves.add(position);
 
-        if (moves.size() > 3) { // Son üç hamle dışında diğerlerini temizle
+        if (moves.size() > 3) {
             int oldestMove = moves.remove(0);
             gameState[oldestMove] = EMPTY;
             buttons[oldestMove].setText("");
@@ -240,7 +239,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         updateGameStatus();
         updatePlayerScore();
     }
-
     private void resetGame() {
         playAgain();
         playerOneScoreCount = 0;

@@ -6,5 +6,6 @@
     <color name="player_two_color">#70fc3a</color>
     <color name="default_button_color">#FFFFFF</color>
     <color name="winning_combination_color">#FFD700</color>
+    <color name="info_color">#DB2E2E</color>
 
 </resources>
