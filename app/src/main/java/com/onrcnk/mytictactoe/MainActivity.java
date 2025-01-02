@@ -1,7 +1,11 @@
 package com.onrcnk.mytictactoe;
 
+import android.media.AudioAttributes;
+import android.media.SoundPool;
 import android.os.Bundle;
 import android.view.View;
+import android.view.animation.Animation;
+import android.view.animation.AnimationUtils;
 import android.widget.Button;
 import android.widget.TextView;
 
@@ -32,11 +36,27 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private final List<Integer> playerOneMoves = new ArrayList<>();
     private final List<Integer> playerTwoMoves = new ArrayList<>();
 
+    private SoundPool soundPool;
+    private int soundX, soundO;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
 
+        // SoundPool yapılandırması
+        AudioAttributes audioAttributes = new AudioAttributes.Builder()
+                .setUsage(AudioAttributes.USAGE_GAME)
+                .setContentType(AudioAttributes.CONTENT_TYPE_SONIFICATION)
+                .build();
+        soundPool = new SoundPool.Builder()
+                .setMaxStreams(2) // Aynı anda iki ses çalabilir
+                .setAudioAttributes(audioAttributes)
+                .build();
+        soundX = soundPool.load(this, R.raw.soundx, 1); // PlayerX sesi
+        soundO = soundPool.load(this, R.raw.soundo, 1); // PlayerO sesi
+
+        // UI Elemanlarını Bağlama
         playerOneScore = findViewById(R.id.score_Player1);
         playerTwoScore = findViewById(R.id.score_Player2);
         playerStatus = findViewById(R.id.textStatus);
@@ -54,15 +74,18 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         buttons[7] = findViewById(R.id.btn7);
         buttons[8] = findViewById(R.id.btn8);
 
+        // Butonlara Click Listener Atama
         for (Button button : buttons) {
             button.setOnClickListener(this);
         }
 
+        // Başlangıç Ayarları
         playerOneScoreCount = 0;
         playerTwoScoreCount = 0;
         playerOneActive = true;
         rounds = 0;
 
+        // Reset ve Play Again Butonları için Listener Ayarları
         reset.setOnClickListener(view -> resetGame());
         playAgain.setOnClickListener(view -> playAgain());
 
@@ -73,15 +96,21 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     @Override
     public void onClick(View view) {
         Button clickedButton = (Button) view;
-        int gameStatePointer = Integer.parseInt(view.getResources().getResourceEntryName(view.getId()).substring(3));
+        String buttonID = view.getResources().getResourceEntryName(view.getId());
+        int gameStatePointer = Integer.parseInt(buttonID.substring(3));
 
         if (!clickedButton.getText().toString().equals("")) {
-            return;
+            return; // Buton zaten işaretlenmişse hiçbir şey yapma
         }
 
+        // Büyüme-küçülme animasyonu
+        playBounceAnimation(clickedButton);
+
         if (playerOneActive) {
+            playSoundEffect(soundX); // PlayerX hamlesinde soundX çal
             makeMove(clickedButton, gameStatePointer, PLAYER_ONE, playerOneMoves, R.color.player_one_color);
         } else {
+            playSoundEffect(soundO); // PlayerO hamlesinde soundO çal
             makeMove(clickedButton, gameStatePointer, PLAYER_TWO, playerTwoMoves, R.color.player_two_color);
         }
 
@@ -94,12 +123,13 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 handleWinningCombination(playerOneMoves);
 
                 if (playerOneScoreCount == 2) {
-                    textWinner.setText("Player X Win");
+                    textWinner.setText("Player X Win!");
                     textWinner.setVisibility(View.VISIBLE);
                     playAgain.setVisibility(View.VISIBLE);
                     reset.setVisibility(View.INVISIBLE);
                     updateGameStatus();
                     disableAllButtons();
+                    animateWinnerText(); // Animasyonu tetikle
                     return;
                 }
             } else {
@@ -108,21 +138,31 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                 handleWinningCombination(playerTwoMoves);
 
                 if (playerTwoScoreCount == 2) {
-                    textWinner.setText("Player O Win");
+                    textWinner.setText("Player O Win!");
                     textWinner.setVisibility(View.VISIBLE);
                     playAgain.setVisibility(View.VISIBLE);
                     reset.setVisibility(View.INVISIBLE);
                     updateGameStatus();
                     disableAllButtons();
+                    animateWinnerText(); // Animasyonu tetikle
                     return;
                 }
             }
         }
 
         if (!isWinner) {
-            playerOneActive = !playerOneActive;
+            playerOneActive = !playerOneActive; // Oyuncu değişimi
         }
         updateGameStatus();
+    }
+
+    private void playSoundEffect(int soundId) {
+        soundPool.play(soundId, 1, 1, 0, 0, 1); // Verilen ses efektini çal
+    }
+
+    private void playBounceAnimation(Button button) {
+        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce_animation);
+        button.startAnimation(bounce);
     }
 
     private void makeMove(Button button, int position, int player, List<Integer> moves, int color) {
@@ -131,7 +171,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         gameState[position] = player;
         moves.add(position);
 
-        if (moves.size() > 3) {
+        if (moves.size() > 3) { // Son üç hamle dışında diğerlerini temizle
             int oldestMove = moves.remove(0);
             gameState[oldestMove] = EMPTY;
             buttons[oldestMove].setText("");
@@ -174,6 +214,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         }
     }
 
+    private void animateWinnerText() {
+        Animation winnerAnimation = AnimationUtils.loadAnimation(this, R.anim.winner_animation);
+        textWinner.startAnimation(winnerAnimation);
+    }
+
     private void playAgain() {
         rounds = 0;
         playerOneActive = true;
@@ -181,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playerTwoScoreCount = 0;
         playerOneMoves.clear();
         playerTwoMoves.clear();
+        textWinner.clearAnimation();
         textWinner.setVisibility(View.GONE);
 
         for (int i = 0; i < buttons.length; i++) {
@@ -200,7 +246,6 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         playerOneScoreCount = 0;
         playerTwoScoreCount = 0;
         updatePlayerScore();
-        textWinner.setVisibility(View.GONE);
     }
 
     private void updatePlayerScore() {
@@ -210,5 +255,11 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
 
     private void updateGameStatus() {
         playerStatus.setText(playerOneScoreCount + "   -   " + playerTwoScoreCount);
+    }
+
+    @Override
+    protected void onDestroy() {
+        super.onDestroy();
+        soundPool.release(); // SoundPool kaynaklarını serbest bırak
     }
 }

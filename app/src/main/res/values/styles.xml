@@ -1,0 +1,12 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <style name="WinnerTextStyle">
+        <item name="android:textColor">@color/winning_combination_color</item>
+        <item name="android:textSize">35sp</item>
+        <item name="android:shadowColor">@color/black</item>
+        <item name="android:shadowDx">3</item> <!-- Gölge hafif sağa -->
+        <item name="android:shadowDy">3</item> <!-- Gölge hafif aşağı -->
+        <item name="android:shadowRadius">5</item> <!-- Daha az bulanıklık -->
+    </style>
+
+</resources>

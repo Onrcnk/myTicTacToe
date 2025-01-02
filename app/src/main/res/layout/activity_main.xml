@@ -63,14 +63,12 @@
 
     <TextView
         android:id="@+id/textWinner"
+        style="@style/WinnerTextStyle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text=""
-        android:textSize="40sp"
-        android:textStyle="bold"
-        android:textColor="@color/white"
         android:layout_centerInParent="true"
-        android:visibility="gone" />
+        android:gravity="center"
+        android:visibility="invisible" />
 
     <!-- Buttons layout -->
     <LinearLayout
@@ -93,7 +91,7 @@
                 android:textSize="26dp"
                 android:layout_marginHorizontal="5dp"
                 android:layout_marginBottom="1.25dp"
-                android:background="@android:drawable/btn_default" />
+                android:background="@android:drawable/btn_default"/>
             <Button
                 android:id="@+id/btn1"
                 android:layout_width="100dp"
