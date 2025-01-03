@@ -40,6 +40,8 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     private SoundPool soundPool;
     private int soundX, soundO;
 
+    private boolean isGameActive = true;
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
@@ -116,6 +118,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         boolean isWinner = checkWinner();
 
         if (isWinner) {
+            isGameActive = false; // Animasyonları devre dışı bırak
             if (playerOneActive) {
                 playerOneScoreCount++;
                 updatePlayerScore();
@@ -147,6 +150,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
                     return;
                 }
             }
+
         }
 
         if (!isWinner) {
@@ -160,8 +164,10 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playBounceAnimation(Button button) {
-        Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce_animation);
-        button.startAnimation(bounce);
+        if (isGameActive) { // Sadece oyun aktifse animasyon oynat
+            Animation bounce = AnimationUtils.loadAnimation(this, R.anim.bounce_animation);
+            button.startAnimation(bounce);
+        }
     }
 
     private void makeMove(Button button, int position, int player, List<Integer> moves, int color) {
@@ -210,6 +216,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
         for (Button button : buttons) {
             button.setEnabled(false);
             button.setText("");
+            button.setVisibility(View.INVISIBLE);
         }
     }
 
@@ -219,6 +226,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
     }
 
     private void playAgain() {
+        isGameActive = true;
         rounds = 0;
         playerOneActive = true;
         playerOneScoreCount = 0;
@@ -232,6 +240,7 @@ public class MainActivity extends AppCompatActivity implements View.OnClickListe
             gameState[i] = EMPTY;
             buttons[i].setText("");
             buttons[i].setEnabled(true);
+            buttons[i].setVisibility(View.VISIBLE);
         }
 
         playAgain.setVisibility(View.INVISIBLE);
